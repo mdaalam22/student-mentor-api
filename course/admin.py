@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.db import models
 from django.db.models import fields
 from .models import Course,CourseContent,Question,Enrolled
-from pagedown.widgets import AdminPagedownWidget
 # Register your models here.
 
 

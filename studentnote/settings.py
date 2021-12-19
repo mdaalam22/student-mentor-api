@@ -100,6 +100,8 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'studentnote.wsgi.application'
 
 

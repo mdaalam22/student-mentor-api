@@ -30,3 +30,8 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+
+
+admin.site.site_header  =  "Student Mentor admin"  
+admin.site.site_title  =  "Student Mentor admin site"
+admin.site.index_title  =  "Student Mentor Admin"

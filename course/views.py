@@ -69,19 +69,19 @@ class CourseDeleteAPIView(generics.DestroyAPIView):
         return obj
 
 class CourseContentView(viewsets.ModelViewSet):
-    queryset = Course.objects.all()
+    queryset = Course.courseobjects.all()
     serializer_class = CourseSerializer
     permission_classes = (IsAuthenticated,)
     
     lookup_field = "slug"
 
     def get_queryset(self):
-        queryset = Course.objects.all()
+        queryset = Course.courseobjects.all()
         slug = self.kwargs['slug']
         if not slug:
             raise ValidationError("Bad request")
         try:
-            queryset = Course.objects.get(slug=slug)
+            queryset = Course.courseobjects.get(slug=slug)
             if not queryset:
                 raise ValidationError("Course not found")
         except:
@@ -92,7 +92,7 @@ class CourseContentView(viewsets.ModelViewSet):
         if not is_enrolled:
             raise ValidationError("You are not enrolled to this course")
 
-        queryset = Course.objects.filter(slug=slug)
+        queryset = Course.courseobjects.filter(slug=slug)
         
     
 
@@ -122,7 +122,6 @@ class StudentEnrolledView(generics.GenericAPIView):
 
     def post(self,request):
         serializer = self.serializer_class(data=request.data,context={'request':request,'slug':request.data['slug']})
-        print(request.data)
         serializer.is_valid(raise_exception=True)
         course = Course.objects.get(slug=request.data['slug'])
         serializer.save(user=request.user,course=course)
