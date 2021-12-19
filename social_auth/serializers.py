@@ -1,5 +1,6 @@
 from rest_framework import serializers
 import google
+from .google import Google
 import environ
 import os
 from rest_framework.exceptions import AuthenticationFailed
@@ -19,7 +20,7 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
     auth_token = serializers.CharField()
 
     def validate_auth_token(self, auth_token):
-        user_data = google.Google.validate(auth_token)
+        user_data = Google.validate(auth_token)
         try:
             user_data['sub']
         except:
@@ -33,9 +34,10 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
         user_id = user_data['sub']
         email = user_data['email']
         name = user_data['name']
+        image = user_data['picture']
         provider = 'google'
 
         return register_social_user(
-            provider=provider, user_id=user_id, email=email, name=name)
+            provider=provider, user_id=user_id, email=email, name=name,image=image)
 
         
