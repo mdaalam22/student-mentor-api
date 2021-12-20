@@ -9,7 +9,7 @@ class CourseSerializerView(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('course_name','grade','slug','description','original_fee','discount','status')
+        fields = ('course_name','grade','slug','description','original_fee','discount','is_premium','status')
 
 
 # class CourseContentSerializerView(serializers.ModelSerializer):
@@ -24,7 +24,23 @@ class CourseSerializerView(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = ['id','question','answer','can_view','course']
+
+    def to_representation(self, data):
+        data = super(QuestionSerializer, self).to_representation(data)
+        try:
+            is_course = Course.courseobjects.get(id=data['course'])
+            enrolled = Enrolled.objects.get(user=self.context['request'].user,course=is_course)
+            if is_course.is_premium_course():
+                if enrolled.paid:
+                    data['can_view'] = True
+                elif not data['can_view']:
+                    data['answer'] = 'premium'
+            else:
+                data['can_view'] = True
+        except:
+            raise serializers.ValidationError("Something went wrong")
+        return data
 
 class CourseContentSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
@@ -32,6 +48,8 @@ class CourseContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseContent
         fields = '__all__'
+
+    
 
 class CourseSerializer(serializers.ModelSerializer):
     # course_name = serializers.CharField(max_length=255,required=False)
@@ -51,7 +69,7 @@ class CourseEnrolledSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Enrolled
-        fields = ['course_name','grade','description','enrolled_at']
+        fields = ['course_name','grade','description','enrolled_at','paid']
 
 
 class StudentEnrolledSerializer(serializers.ModelSerializer):
