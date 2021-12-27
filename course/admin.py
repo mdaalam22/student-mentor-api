@@ -18,6 +18,7 @@ class ChapterAdmin(admin.TabularInline):
 class CourseAdmin(admin.ModelAdmin):
     model = Course
     search_fields = ['course_name']
+    readonly_fields = ('slug',)
     inlines = [ChapterAdmin]
 
 class CourseContentAdmin(admin.ModelAdmin):
@@ -38,8 +39,9 @@ admin.site.register(CourseContent,CourseContentAdmin)
 
 class EnrolledAdmin(admin.ModelAdmin):
     model = Enrolled
-    list_filter = ('user__username','course__course_name')
+    list_filter = ('course__course_name','paid')
     search_fields = ('user__username','course__course_name')
+
     
 
 admin.site.register(Enrolled,EnrolledAdmin)

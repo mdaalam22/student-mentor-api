@@ -10,7 +10,8 @@ from .serializers import (
     setNewPasswordSerializer,
     LogoutSerializer,
     ChangePasswordSerializer,
-    UpdateUserSerializer
+    UpdateUserSerializer,
+    UserInfoSerializer
 )
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -34,6 +35,7 @@ import environ
 from django.conf import settings
 from rest_framework.parsers import MultiPartParser,FormParser
 from rest_framework.views import APIView
+from django.core.exceptions import ValidationError
 
 
 env = environ.Env(
@@ -78,6 +80,22 @@ class CustomRedirect(HttpResponsePermanentRedirect):
 
 #         return Response(user_data,status=status.HTTP_201_CREATED)
 
+class UserInfoView(generics.ListAPIView):
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = RegisterSerializer
+    renderer_classes = (UserRenderer,)
+    pagination_class  = None
+  
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+        queryset = queryset.filter(username=self.request.user.username)
+        if not queryset:
+            raise ValidationError("user not found")
+
+        return queryset
+
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
     parser_classes = [MultiPartParser,FormParser]
@@ -95,7 +113,7 @@ class RegisterView(generics.GenericAPIView):
             token = RefreshToken.for_user(user).access_token
             current_site = get_current_site(request).domain
             relativeLink = reverse('email-verify')
-            absurl = f'http://{current_site+relativeLink}?token={token}'
+            absurl = f'https://{current_site+relativeLink}?token={token}'
             email_body = "Hi "+user.username+",\n"+"Use below link to verify your email\n"+absurl
             data = {
                 'to_email':user.email,
@@ -157,8 +175,8 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             current_site = get_current_site(request=request).domain
             relativeLink = reverse('password-reset-confirm',
                 kwargs={'uidb64':uidb64,'token':token})
-            absurl = f'http://{current_site+relativeLink}'
-            email_body = "Hello \n Use below link to reset your password\n"+absurl+"?redirect_url="+redirect_url
+            absurl = f'https://{current_site+relativeLink}'
+            email_body = "Hello "+user.username+",\n Use below link to reset your password\n"+absurl+"?redirect_url="+redirect_url
             data = {
                 'to_email':user.email,
                 'email_body':email_body,
@@ -230,7 +248,7 @@ class ChangePasswordView(generics.UpdateAPIView):
 class UpdateProfileView(generics.UpdateAPIView):
 
     queryset = User.objects.all()
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     parser_classes = (MultiPartParser,FormParser)
     serializer_class = UpdateUserSerializer
 

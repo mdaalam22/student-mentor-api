@@ -7,12 +7,14 @@ LoginView,PasswordTokenCheckAPI,
 RequestPasswordResetEmail, setNewPasswordAPIView,
 LogoutAPIView,
 ChangePasswordView,
-UpdateProfileView
+UpdateProfileView,
+UserInfoView
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
 urlpatterns = [
+    path('userinfo/',UserInfoView.as_view(),name='user-info'),
     path('register/',RegisterView.as_view(),name='register'),
     path('login/',LoginView.as_view(),name='login'),
     path('logout/',LogoutAPIView.as_view(),name='logout'),
