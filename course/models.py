@@ -42,6 +42,9 @@ class Course(models.Model):
     def __str__(self):
         return self.course_name
 
+    def __unicode__(self):
+        return self.course_name
+
     def is_premium_course(self):
         return self.is_premium
 
@@ -77,3 +80,6 @@ class Enrolled(models.Model):
     paid = models.BooleanField(default=False)
     class Meta:
         verbose_name_plural = 'enrolled'
+
+    def __str__(self) -> str:
+        return f'{self.user.username} - {self.course.course_name}'

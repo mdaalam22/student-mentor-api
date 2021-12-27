@@ -4,7 +4,12 @@ from django.contrib.auth.models import (
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 
+
 # Create your models here.
+
+
+def default_img():
+    return f'profile_img/default.jpg'
 
 
 def upload_img(instance,filename):
@@ -12,11 +17,14 @@ def upload_img(instance,filename):
 
 class UserManager(BaseUserManager):
 
-    def create_user(self,username,name,email,phone_number,image,password=None):
+    def create_user(self,username,name,email,phone_number,image=None,password=None):
         if username is None:
             raise TypeError("User should have a username")
         if email is None:
             raise TypeError("User should have an email")
+        
+        if image is None:
+            image = default_img()
 
         user = self.model(username=username,name=name,email=self.normalize_email(email),phone_number=phone_number,image=image)
         user.set_password(password)
@@ -54,7 +62,10 @@ class User(AbstractBaseUser,PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return self.username;
+        return self.username
+    
+    def __unicode__(self):
+        return self.username
 
     def tokens(self):
         refresh = RefreshToken.for_user(self)

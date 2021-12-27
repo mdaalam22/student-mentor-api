@@ -65,11 +65,12 @@ class CourseSerializer(serializers.ModelSerializer):
 class CourseEnrolledSerializer(serializers.ModelSerializer):
     course_name = serializers.CharField(source='course.course_name')
     grade = serializers.CharField(source='course.grade')
+    slug = serializers.CharField(source='course.slug')
     description = serializers.CharField(source='course.description')
 
     class Meta:
         model = Enrolled
-        fields = ['course_name','grade','description','enrolled_at','paid']
+        fields = ['course_name','grade','slug','description','enrolled_at','paid']
 
 
 class StudentEnrolledSerializer(serializers.ModelSerializer):

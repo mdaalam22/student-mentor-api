@@ -15,6 +15,9 @@ from rest_framework_simplejwt.tokens import RefreshToken,TokenError
 from email_validator import validate_email, EmailNotValidError
 import phonenumbers
 
+from django.contrib.auth import password_validation as pass_validator
+from django.core import exceptions
+
 
 
 
@@ -30,6 +33,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         username = attrs.get('username','')
         name = attrs.get('name','')
         phone_number_str = attrs.get('phone_number','')
+        password = attrs.get('password','')
+
+        user = User(
+            username=username,
+            email=email,
+            name=name,
+            phone_number = phone_number_str
+        )
 
         if not (len(username)>5 and len(username)<=30 and username.isalnum()):
             raise serializers.ValidationError(
@@ -47,10 +58,23 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Email is not valid')
         try:
             phone_num = phonenumbers.parse(phone_number_str)
-            if not phonenumbers.is_valid_number(phone_num):
+            if not phonenumbers.is_possible_number(phone_num):
                 raise ValidationError("Phone number is not valid")
         except phonenumbers.NumberParseException:
             raise ValidationError("Phone number is not valid")
+
+        #password validation
+        pass_errors = dict() 
+        try:
+            # validate the password and catch the exception
+            pass_validator.validate_password(password=password, user=user)
+
+        # the exception raised here is different than serializers.ValidationError
+        except exceptions.ValidationError as e:
+            pass_errors['password'] = list(e.messages)
+
+        if pass_errors:
+            raise serializers.ValidationError(pass_errors)
 
 
         return attrs
