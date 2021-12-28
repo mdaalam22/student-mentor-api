@@ -169,12 +169,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #send email setting
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.studentmentor.xyz'
-EMAIL_PORT = 26
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
 EMAIL_HOST_USER = env('EMAIL_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_PASS')
-EMAIL_USE_SSL = False
-EMAIL_USE_TLS = False
+EMAIL_USE_TLS = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

@@ -11,7 +11,8 @@ from .serializers import (
     LogoutSerializer,
     ChangePasswordSerializer,
     UpdateUserSerializer,
-    UserInfoSerializer
+    UserInfoSerializer,
+    SendEmailVerifyLinkSerializer
 )
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -83,7 +84,7 @@ class CustomRedirect(HttpResponsePermanentRedirect):
 class UserInfoView(generics.ListAPIView):
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
-    serializer_class = RegisterSerializer
+    serializer_class = UserInfoSerializer
     renderer_classes = (UserRenderer,)
     pagination_class  = None
   
@@ -149,6 +150,34 @@ class VerifyEmail(views.APIView):
 
         except jwt.exceptions.DecodeError as decodeerr:
             return Response({'error':'Invalid token'},status=status.HTTP_400_BAD_REQUEST)
+
+
+class SendEmailVerifyLink(generics.GenericAPIView):
+    serializer_class = SendEmailVerifyLinkSerializer
+    
+    def post(self,request):
+       
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid()
+        email = request.data['email']
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            if user.is_verified:
+                return Response({'error':'Your email is already verified'},status=status.HTTP_302_FOUND)
+            token = RefreshToken.for_user(user).access_token
+            current_site = get_current_site(request).domain
+            relativeLink = reverse('email-verify')
+            absurl = f'https://{current_site+relativeLink}?token={token}'
+            email_body = "Hi "+user.username+",\n"+"Use below link to verify your email\n"+absurl
+            data = {
+                'to_email':user.email,
+                'email_body':email_body,
+                'email_subject':'Verify your email'
+            }
+            Util.send_email(data)
+            return Response({'success':'We have sent you a link to verify your email'},status=status.HTTP_200_OK)
+        else:
+            return Response({'error':'User with this email does not exist'},status=status.HTTP_404_NOT_FOUND)
 
 
 class LoginView(generics.GenericAPIView):

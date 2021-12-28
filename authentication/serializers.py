@@ -24,7 +24,7 @@ import datetime
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields =  ['username','name','email','phone_number','image','dob','institute','address']
+        fields =  ['id','username','name','email','phone_number','image','dob','institute','address']
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=60,min_length=8,write_only=True)
@@ -67,10 +67,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         #phone number validation
         try:
-            phone_num = phonenumbers.parse(phone_number_str)
-            if not phonenumbers.is_possible_number(phone_num):
+            phone_num = str(phone_number_str)
+            if not (len(phone_num)>7 and phone_num.replace("+","").isdigit()):
                 raise serializers.ValidationError("Phone number is not valid")
-        except phonenumbers.NumberParseException:
+        except:
             raise serializers.ValidationError("Phone number is not valid")
 
         #dob validation
@@ -127,7 +127,19 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
         model = User
         fields = ['token']
 
+class SendEmailVerifyLinkSerializer(serializers.Serializer):
+    email = serializers.EmailField(min_length=6)
+    class Meta:
+        fields = ['email']
 
+    def validate_email(self, value):
+        try:
+            valid = validate_email(value)
+            email = valid.email
+        except EmailNotValidError as e:
+            raise serializers.ValidationError('Email is not valid')
+        
+        return value
 
 class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=255,min_length=4)
@@ -179,6 +191,15 @@ class RequestPasswordResetEmailSerializer(serializers.Serializer):
 
     class Meta:
         fields = ['email']
+
+    def validate_email(self, value):
+        try:
+            valid = validate_email(value)
+            email = valid.email
+        except EmailNotValidError as e:
+            raise serializers.ValidationError('Email is not valid')
+        
+        return value
 
 
 class setNewPasswordSerializer(serializers.Serializer):
@@ -302,11 +323,11 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     
     def validate_phone_number(self,value):
         try:
-            phone_num = phonenumbers.parse(value)
-            if not phonenumbers.is_valid_number(phone_num):
-                raise ValidationError("Phone number is not valid")
-        except phonenumbers.NumberParseException:
-            raise ValidationError("Phone number is not valid")
+            phone_num = str(value)
+            if not (len(phone_num)>7 and phone_num.replace("+","").isdigit()):
+                raise serializers.ValidationError("Phone number is not valid")
+        except:
+            raise serializers.ValidationError("Phone number is not valid")
 
         return value
 
@@ -362,9 +383,9 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             current_site = get_current_site(self.context['request']).domain
             relativeLink = reverse('email-verify')
             absurl = f'https://{current_site+relativeLink}?token={token}'
-            email_body = "Hi "+user.username+",\n"+"Use below link to verify your email\n"+absurl
+            email_body = "Hi "+instance.username+",\n"+"Use below link to verify your email\n"+absurl
             data = {
-                'to_email':user.email,
+                'to_email':instance.email,
                 'email_body':email_body,
                 'email_subject':'Verify your email'
             }
