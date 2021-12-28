@@ -34,7 +34,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = 'django-insecure-=@_ziamd@@y!%26(swrkhf6mn1v4m7p=y$!vjcwh$rbx7@o)g9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -109,24 +109,24 @@ WSGI_APPLICATION = 'studentnote.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-#mysql configuration
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'DB_NAME',
-#         'USER': 'DB_USER',
-#         'PASSWORD': 'DB_PASSWORD',
-#         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-#         'PORT': '3306',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
 #     }
 # }
+
+#mysql configuration
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'studentmentor',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3308',
+    }
+}
 
 
 REST_FRAMEWORK = {
