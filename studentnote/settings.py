@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 import os
+from authentication.pass_validators import SymbolValidator
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 env = environ.Env(
     # set casting, default value
@@ -33,9 +34,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = 'django-insecure-=@_ziamd@@y!%26(swrkhf6mn1v4m7p=y$!vjcwh$rbx7@o)g9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 AUTH_USER_MODEL = 'authentication.User'
 
@@ -115,6 +116,18 @@ DATABASES = {
     }
 }
 
+#mysql configuration
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'DB_NAME',
+#         'USER': 'DB_USER',
+#         'PASSWORD': 'DB_PASSWORD',
+#         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+#         'PORT': '3306',
+#     }
+# }
+
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
@@ -148,15 +161,19 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+    {
+        'NAME': 'authentication.pass_validators.SymbolValidator'
+    },
 ]
 
 
 #send email setting
-EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = env('EMAIL_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_PASS')
+EMAIL_USE_TLS = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -175,14 +192,24 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+# STATIC_URL = '/static/'
+
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/' # 'http://myhost:port/media/'
+# STATIC_ROOT = "static/"
+
 STATIC_URL = '/static/'
 
+MEDIA_URL = '/media/'
+
+  
+
+if DEBUG:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/' # 'http://myhost:port/media/'
-
-
-
-STATIC_ROOT = "static/"
 
 
 # ==========Ckeditor config==================

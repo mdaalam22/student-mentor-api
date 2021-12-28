@@ -1,5 +1,6 @@
 from django.contrib.auth import tokens
 from django.core.exceptions import ValidationError
+from django.db.models import fields
 from django.views import generic
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
@@ -15,21 +16,39 @@ from rest_framework_simplejwt.tokens import RefreshToken,TokenError
 from email_validator import validate_email, EmailNotValidError
 import phonenumbers
 
+from django.contrib.auth import password_validation as pass_validator
+from django.core import exceptions
+import datetime
 
 
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields =  ['id','username','name','email','phone_number','image','dob','institute','address']
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=60,min_length=8,write_only=True)
 
     class Meta:
         model = User
-        fields = ['username','name','email','phone_number','image','password']
+        fields = ['username','name','email','phone_number','image','dob','institute','address','password']
 
     def validate(self, attrs):
         email = attrs.get('email','')
         username = attrs.get('username','')
         name = attrs.get('name','')
         phone_number_str = attrs.get('phone_number','')
+        password = attrs.get('password','')
+        dob = attrs.get('dob','')
+        institute = attrs.get('institute','')
+        address = attrs.get('address','')
+
+        user = User(
+            username=username,
+            email=email,
+            name=name,
+            phone_number = phone_number_str
+        )
 
         if not (len(username)>5 and len(username)<=30 and username.isalnum()):
             raise serializers.ValidationError(
@@ -39,18 +58,61 @@ class RegisterSerializer(serializers.ModelSerializer):
         if not name.replace(" ", "").isalpha():
             raise serializers.ValidationError('Please enter a valid name,Name should contain only alphabets')
             
-        
+        #email validation
         try:
             valid = validate_email(email)
             email = valid.email
         except EmailNotValidError as e:
             raise serializers.ValidationError('Email is not valid')
+
+        #phone number validation
         try:
-            phone_num = phonenumbers.parse(phone_number_str)
-            if not phonenumbers.is_valid_number(phone_num):
-                raise ValidationError("Phone number is not valid")
-        except phonenumbers.NumberParseException:
-            raise ValidationError("Phone number is not valid")
+            phone_num = str(phone_number_str)
+            if not (len(phone_num)>7 and phone_num.replace("+","").isdigit()):
+                raise serializers.ValidationError("Phone number is not valid")
+        except:
+            raise serializers.ValidationError("Phone number is not valid")
+
+        #dob validation
+        if dob:
+            try:
+                date_of_birth = datetime.datetime.strptime(str(dob), "%Y-%m-%d")
+            except:
+                raise serializers.ValidationError("Incorrect data format, should be YYYY-MM-DD")
+
+        #institute validation
+        if institute:
+            try:
+                if not str(institute).replace(" ","").isalnum():
+                    raise serializers.ValidationError("Enter valid institute name")
+            except:
+                raise serializers.ValidationError("Enter valid institute name")
+
+        #address validation
+        if address:
+            try:
+                validChar = "-,#.'/ "
+                addr = str(address)
+                for vchar in validChar:
+                    addr = addr.replace(vchar,"")
+                if not addr.isalnum():
+                    raise serializers.ValidationError("Enter valid address format")
+
+            except:
+                raise serializers.ValidationError("Enter valid address format")
+
+        #password validation
+        pass_errors = dict() 
+        try:
+            # validate the password and catch the exception
+            pass_validator.validate_password(password=password, user=user)
+
+        # the exception raised here is different than serializers.ValidationError
+        except exceptions.ValidationError as e:
+            pass_errors['password'] = list(e.messages)
+
+        if pass_errors:
+            raise serializers.ValidationError(pass_errors)
 
 
         return attrs
@@ -65,7 +127,19 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
         model = User
         fields = ['token']
 
+class SendEmailVerifyLinkSerializer(serializers.Serializer):
+    email = serializers.EmailField(min_length=6)
+    class Meta:
+        fields = ['email']
 
+    def validate_email(self, value):
+        try:
+            valid = validate_email(value)
+            email = valid.email
+        except EmailNotValidError as e:
+            raise serializers.ValidationError('Email is not valid')
+        
+        return value
 
 class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=255,min_length=4)
@@ -117,6 +191,15 @@ class RequestPasswordResetEmailSerializer(serializers.Serializer):
 
     class Meta:
         fields = ['email']
+
+    def validate_email(self, value):
+        try:
+            valid = validate_email(value)
+            email = valid.email
+        except EmailNotValidError as e:
+            raise serializers.ValidationError('Email is not valid')
+        
+        return value
 
 
 class setNewPasswordSerializer(serializers.Serializer):
@@ -204,7 +287,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'name', 'email','phone_number','image')
+        fields = ('username', 'name', 'email','phone_number','image','dob','institute','address')
 
     def validate_email(self, value):
         user = self.context['request'].user
@@ -230,18 +313,53 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         return value
 
     def validate_name(self,value):
-        if not value.replace(" ", "").isalpha():
+        try:
+            if not value.replace(" ", "").isalpha():
+                raise serializers.ValidationError('Please enter a valid name,Name should contain only alphabets')
+        except:
             raise serializers.ValidationError('Please enter a valid name,Name should contain only alphabets')
+
         return value
     
     def validate_phone_number(self,value):
         try:
-            phone_num = phonenumbers.parse(value)
-            if not phonenumbers.is_valid_number(phone_num):
-                raise ValidationError("Phone number is not valid")
-        except phonenumbers.NumberParseException:
-            raise ValidationError("Phone number is not valid")
+            phone_num = str(value)
+            if not (len(phone_num)>7 and phone_num.replace("+","").isdigit()):
+                raise serializers.ValidationError("Phone number is not valid")
+        except:
+            raise serializers.ValidationError("Phone number is not valid")
 
+        return value
+
+    def validate_dob(self,value):
+        if value:
+            try:
+                date_of_birth = datetime.datetime.strptime(str(value), "%Y-%m-%d")
+            except:
+                raise serializers.ValidationError("Incorrect data format, should be YYYY-MM-DD")
+        return value
+
+    def validate_institute(self,value):
+        if value:
+            try:
+                if not str(value).replace(" ","").isalnum():
+                    raise serializers.ValidationError("Enter valid institute name")
+            except:
+                raise serializers.ValidationError("Enter valid institute name")
+        return value
+
+    def validate_address(self,value):
+        if value:
+            try:
+                validChar = "-,#.'/ "
+                addr = str(value)
+                for vchar in validChar:
+                    addr = addr.replace(vchar,"")
+                if not addr.isalnum():
+                    raise serializers.ValidationError("Enter valid address format")
+
+            except:
+                raise serializers.ValidationError("Enter valid address format")
         return value
 
     def update(self, instance, validated_data):
@@ -249,12 +367,31 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
         if user.id != instance.id:
             raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
+        
+        instance.name = validated_data.get('name',None) if validated_data.get('name',None) else user.name
+        instance.phone_number = validated_data.get('phone_number',None) if validated_data.get('phone_number',None) else user.phone_number 
+        instance.image = validated_data.get('image',None) if validated_data.get('image',None) else user.image
+        instance.email = validated_data.get('email',None) if validated_data.get('email',None) else user.email
+        instance.username = validated_data.get('username',None) if validated_data.get('username',None) else user.username
+        instance.dob = validated_data.get('dob',None) if validated_data.get('dob',None) else user.dob
+        instance.institute = validated_data.get('institute',None) if validated_data.get('institute',None) else user.institute
+        instance.address =validated_data.get('address',None) if validated_data.get('address',None) else user.address
 
-        instance.name = validated_data['name']
-        instance.phone_number = validated_data['phone_number']
-        instance.image = validated_data['image']
-        instance.email = validated_data['email']
-        instance.username = validated_data['username']
+        if instance.email != user.email:
+            instance.is_verified = False
+            token = RefreshToken.for_user(user).access_token
+            current_site = get_current_site(self.context['request']).domain
+            relativeLink = reverse('email-verify')
+            absurl = f'https://{current_site+relativeLink}?token={token}'
+            email_body = "Hi "+instance.username+",\n"+"Use below link to verify your email\n"+absurl
+            data = {
+                'to_email':instance.email,
+                'email_body':email_body,
+                'email_subject':'Verify your email'
+            }
+            Util.send_email(data)
+            # print(email_body)
+            # print(instance.is_verified)
 
         instance.save()
 
