@@ -17,7 +17,7 @@ def upload_img(instance,filename):
 
 class UserManager(BaseUserManager):
 
-    def create_user(self,username,name,email,phone_number,image=None,dob=None,institute=None,address=None,password=None):
+    def create_user(self,username,name,email,phone_number,image=None,dob=None,institute=None,address=None,level=None,course_name=None,password=None):
         if username is None:
             raise TypeError("User should have a username")
         if email is None:
@@ -26,16 +26,16 @@ class UserManager(BaseUserManager):
         if image is None:
             image = default_img()
 
-        user = self.model(username=username,name=name,email=self.normalize_email(email),phone_number=phone_number,image=image,dob=dob,institute=institute,address=address)
+        user = self.model(username=username,name=name,email=self.normalize_email(email),phone_number=phone_number,image=image,dob=dob,institute=institute,address=address,level=level,course_name=course_name)
         user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self,username,name,email,phone_number,image,dob=None,institute=None,address=None,password=None):
+    def create_superuser(self,username,name,email,phone_number,image,dob=None,institute=None,address=None,level=None,course_name=None,password=None):
         if password is None:
             raise TypeError("Password should not be none")
 
-        user = self.create_user(username,name,email,phone_number,image,dob,institute,address,password)
+        user = self.create_user(username,name,email,phone_number,image,dob,institute,address,level,course_name,password)
         user.is_superuser = True
         user.is_staff = True
         user.save()
@@ -52,6 +52,8 @@ class User(AbstractBaseUser,PermissionsMixin):
     dob = models.DateField(null=True,blank=True)
     institute = models.CharField(max_length=255,null=True,blank=True)
     address = models.CharField(max_length=60,null=True,blank=True)
+    level = models.CharField(max_length=60,null=True,blank=True)
+    course_name = models.CharField(max_length=60,null=True,blank=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

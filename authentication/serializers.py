@@ -24,14 +24,14 @@ import datetime
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields =  ['id','username','name','email','phone_number','image','dob','institute','address']
+        fields =  ['id','username','name','email','phone_number','image','dob','institute','address','level','course_name']
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=60,min_length=8,write_only=True)
 
     class Meta:
         model = User
-        fields = ['username','name','email','phone_number','image','dob','institute','address','password']
+        fields = ['username','name','email','phone_number','image','dob','institute','address','level','course_name','password']
 
     def validate(self, attrs):
         email = attrs.get('email','')
@@ -42,6 +42,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         dob = attrs.get('dob','')
         institute = attrs.get('institute','')
         address = attrs.get('address','')
+        level = attrs.get('level','')
+        course_name = attrs.get('course_name','')
 
         user = User(
             username=username,
@@ -100,6 +102,22 @@ class RegisterSerializer(serializers.ModelSerializer):
 
             except:
                 raise serializers.ValidationError("Enter valid address format")
+
+        if level:
+            try:
+                if not str(level).replace(" ","").isalnum():
+                    raise serializers.ValidationError("Enter valid level")
+            except:
+                raise serializers.ValidationError("Enter valid level")
+
+        if course_name:
+            try:
+                if not str(course_name).replace(" ","").isalnum():
+                    raise serializers.ValidationError("Enter valid course name")
+            except:
+                raise serializers.ValidationError("Enter valid course name")
+
+
 
         #password validation
         pass_errors = dict() 
@@ -287,7 +305,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'name', 'email','phone_number','image','dob','institute','address')
+        fields = ('username', 'name', 'email','phone_number','image','dob','institute','address','level','course_name')
 
     def validate_email(self, value):
         user = self.context['request'].user
@@ -361,6 +379,24 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             except:
                 raise serializers.ValidationError("Enter valid address format")
         return value
+    
+    def validate_level(self,value):
+        if value:
+            try:
+                if not str(value).replace(" ","").isalnum():
+                    raise serializers.ValidationError("Enter valid level")
+            except:
+                raise serializers.ValidationError("Enter valid level")
+        return value
+    
+    def validate_course_name(self,value):
+        if value:
+            try:
+                if not str(value).replace(" ","").isalpha():
+                    raise serializers.ValidationError("Enter valid course name")
+            except:
+                raise serializers.ValidationError("Enter valid course name")
+        return value
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
@@ -376,8 +412,10 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.dob = validated_data.get('dob',None) if validated_data.get('dob',None) else user.dob
         instance.institute = validated_data.get('institute',None) if validated_data.get('institute',None) else user.institute
         instance.address =validated_data.get('address',None) if validated_data.get('address',None) else user.address
+        instance.level = validated_data.get('level',None) if validated_data.get('level',None) else user.level
+        instance.course_name = validated_data.get('course_name',None) if validated_data.get('course_name',None) else user.course_name
 
-        if instance.email != user.email:
+        if str(instance.email).lower() != user.email:
             instance.is_verified = False
             token = RefreshToken.for_user(user).access_token
             current_site = get_current_site(self.context['request']).domain
