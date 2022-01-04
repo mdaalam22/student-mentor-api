@@ -6,7 +6,9 @@ CourseDetailView,
 CourseDeleteAPIView,
 CourseContentView,
 CourseEnrolledView,
-StudentEnrolledView
+StudentEnrolledView,
+NewCourseView,
+PopularCourseView
 )
 
 app_name ='course'
@@ -19,4 +21,6 @@ urlpatterns = [
     path('content/<slug:slug>/',CourseContentView.as_view({'get': 'retrieve'}),name='course_content'),
     path('mycourse/',CourseEnrolledView.as_view(),name='enrolled_course'),
     path('enroll/',StudentEnrolledView.as_view(),name='enroll'),
+    path('new-course/',NewCourseView.as_view(),name='new-course'),
+    path('popular-course/',PopularCourseView.as_view(),name='popular-course'),
 ]

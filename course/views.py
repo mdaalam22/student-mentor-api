@@ -17,6 +17,8 @@ StudentEnrolledSerializer
 )
 from rest_framework.views import APIView
 from rest_framework.filters import OrderingFilter
+
+from django.db.models import Count
 # Create your views here.
 
 class CourseCreateAPIView(generics.GenericAPIView):
@@ -119,13 +121,26 @@ class StudentEnrolledView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = StudentEnrolledSerializer
 
-
     def post(self,request):
         serializer = self.serializer_class(data=request.data,context={'request':request,'slug':request.data['slug']})
         serializer.is_valid(raise_exception=True)
         course = Course.objects.get(slug=request.data['slug'])
         serializer.save(user=request.user,course=course)
         return Response({'success':True,'message':'You are successfully enrolled to this course'},status=status.HTTP_201_CREATED)
+
+
+class NewCourseView(generics.ListAPIView):
+    queryset = Course.courseobjects.order_by('-created_at')[:5]
+    permission_classes = [IsAuthenticated]
+    serializer_class = CourseSerializerView
+
+class PopularCourseView(generics.ListAPIView):
+    queryset = Course.courseobjects.annotate(enroll_count = Count('student_course')).order_by('-enroll_count')[:5]
+    permission_classes = [IsAuthenticated]
+    serializer_class = CourseSerializerView
+
+
+    
 
 
 
