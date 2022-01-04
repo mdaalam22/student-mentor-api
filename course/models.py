@@ -8,7 +8,8 @@ from django_ckeditor_5.fields import CKEditor5Field
 
 # Create your models here.
 
-
+def upload_img(instance,filename):
+    return f'course_img/{filename}'
 
 class Course(models.Model):
 
@@ -22,6 +23,7 @@ class Course(models.Model):
     )
 
     course_name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to=upload_img,default="course_img/default.jpg")
     slug = models.SlugField(max_length = 255, null = True, blank = True)
     grade = models.CharField(max_length=80)
     description = models.TextField()

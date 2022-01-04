@@ -9,7 +9,7 @@ class CourseSerializerView(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('course_name','grade','slug','description','original_fee','discount','is_premium','status')
+        fields = ('course_name','image','grade','slug','description','original_fee','discount','is_premium','status')
 
 
 # class CourseContentSerializerView(serializers.ModelSerializer):
@@ -64,13 +64,14 @@ class CourseSerializer(serializers.ModelSerializer):
 
 class CourseEnrolledSerializer(serializers.ModelSerializer):
     course_name = serializers.CharField(source='course.course_name')
+    image = serializers.ImageField(source='course.image')
     grade = serializers.CharField(source='course.grade')
     slug = serializers.CharField(source='course.slug')
     description = serializers.CharField(source='course.description')
 
     class Meta:
         model = Enrolled
-        fields = ['course_name','grade','slug','description','enrolled_at','paid']
+        fields = ['course_name','image','grade','slug','description','enrolled_at','paid']
 
 
 class StudentEnrolledSerializer(serializers.ModelSerializer):
