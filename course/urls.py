@@ -8,7 +8,8 @@ CourseContentView,
 CourseEnrolledView,
 StudentEnrolledView,
 NewCourseView,
-PopularCourseView
+PopularCourseView,
+PaymentDetailView
 )
 
 app_name ='course'
@@ -23,4 +24,5 @@ urlpatterns = [
     path('enroll/',StudentEnrolledView.as_view(),name='enroll'),
     path('new-course/',NewCourseView.as_view(),name='new-course'),
     path('popular-course/',PopularCourseView.as_view(),name='popular-course'),
+    path('payment-detail/',PaymentDetailView.as_view(),name='payment-detail'),
 ]

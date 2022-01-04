@@ -11,6 +11,10 @@ from django_ckeditor_5.fields import CKEditor5Field
 def upload_img(instance,filename):
     return f'course_img/{filename}'
 
+def upload_payment_img(instance,filename):
+    return f'payment_img/{filename}'
+
+
 class Course(models.Model):
 
     class CourseObjects(models.Manager):
@@ -85,3 +89,8 @@ class Enrolled(models.Model):
 
     def __str__(self) -> str:
         return f'{self.user.username} - {self.course.course_name}'
+
+
+class PaymentDetail(models.Model):
+    image = models.ImageField(upload_to=upload_payment_img,default="payment_img/default.jpg")
+    uploaded_at = models.DateTimeField(auto_now_add=True)

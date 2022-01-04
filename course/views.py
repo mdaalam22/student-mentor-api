@@ -7,13 +7,15 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 
 from authentication import serializers
-from .models import Course, CourseContent, Enrolled
+from course.admin import PaymentDetailAdmin
+from .models import Course, CourseContent, Enrolled,PaymentDetail
 from .serializers import (
 CourseSerializerView,
 CourseSerializer,
 CourseContentSerializer,
 CourseEnrolledSerializer,
-StudentEnrolledSerializer
+StudentEnrolledSerializer,
+PaymentDetailSerializer
 )
 from rest_framework.views import APIView
 from rest_framework.filters import OrderingFilter
@@ -142,7 +144,9 @@ class PopularCourseView(generics.ListAPIView):
 
     
 
-
+class PaymentDetailView(generics.ListAPIView):
+    queryset = PaymentDetail.objects.order_by('-uploaded_at')[:1]
+    serializer_class = PaymentDetailSerializer
 
 
 
