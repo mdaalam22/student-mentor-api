@@ -4,6 +4,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from studentnote.utils import unique_slug_generator
 from django_ckeditor_5.fields import CKEditor5Field
+import lxml.html
 
 
 # Create your models here.
@@ -77,6 +78,9 @@ class Question(models.Model):
     can_view = models.BooleanField(default=False)
     edited_by = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return lxml.html.fromstring(self.question).text_content() if self.question else ''
 
 
 class Enrolled(models.Model):

@@ -21,7 +21,18 @@ from rest_framework.views import APIView
 from rest_framework.filters import OrderingFilter
 
 from django.db.models import Count
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
+
+# == view to load chapter list of the selected course dynamically ==
+@login_required
+def chapter_list(request,course_id):
+    chapters = CourseContent.objects.filter(course=course_id)
+    return JsonResponse({'data': [{'id': chap.id, 'chapter_title': chap.chapter_title} for chap in chapters]})
+#================end view==============
 
 class CourseCreateAPIView(generics.GenericAPIView):
     permission_classes = [IsAdminUser]

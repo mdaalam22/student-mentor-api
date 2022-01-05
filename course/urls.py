@@ -9,7 +9,8 @@ CourseEnrolledView,
 StudentEnrolledView,
 NewCourseView,
 PopularCourseView,
-PaymentDetailView
+PaymentDetailView,
+chapter_list
 )
 
 app_name ='course'
@@ -25,4 +26,5 @@ urlpatterns = [
     path('new-course/',NewCourseView.as_view(),name='new-course'),
     path('popular-course/',PopularCourseView.as_view(),name='popular-course'),
     path('payment-detail/',PaymentDetailView.as_view(),name='payment-detail'),
+    path('chapter-list/<int:course_id>',chapter_list,name='chapter_list'),
 ]
