@@ -7,17 +7,32 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 
 from authentication import serializers
-from .models import Course, CourseContent, Enrolled
+from course.admin import PaymentDetailAdmin
+from .models import Course, CourseContent, Enrolled,PaymentDetail
 from .serializers import (
 CourseSerializerView,
 CourseSerializer,
 CourseContentSerializer,
 CourseEnrolledSerializer,
-StudentEnrolledSerializer
+StudentEnrolledSerializer,
+PaymentDetailSerializer
 )
 from rest_framework.views import APIView
 from rest_framework.filters import OrderingFilter
+
+from django.db.models import Count
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
+
+# == view to load chapter list of the selected course dynamically ==
+@login_required
+def chapter_list(request,course_id):
+    chapters = CourseContent.objects.filter(course=course_id)
+    return JsonResponse({'data': [{'id': chap.id, 'chapter_title': chap.chapter_title} for chap in chapters]})
+#================end view==============
 
 class CourseCreateAPIView(generics.GenericAPIView):
     permission_classes = [IsAdminUser]
@@ -119,7 +134,6 @@ class StudentEnrolledView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = StudentEnrolledSerializer
 
-
     def post(self,request):
         serializer = self.serializer_class(data=request.data,context={'request':request,'slug':request.data['slug']})
         serializer.is_valid(raise_exception=True)
@@ -128,6 +142,22 @@ class StudentEnrolledView(generics.GenericAPIView):
         return Response({'success':True,'message':'You are successfully enrolled to this course'},status=status.HTTP_201_CREATED)
 
 
+class NewCourseView(generics.ListAPIView):
+    queryset = Course.courseobjects.order_by('-created_at')[:5]
+    permission_classes = [IsAuthenticated]
+    serializer_class = CourseSerializerView
+
+class PopularCourseView(generics.ListAPIView):
+    queryset = Course.courseobjects.annotate(enroll_count = Count('student_course')).order_by('-enroll_count')[:5]
+    permission_classes = [IsAuthenticated]
+    serializer_class = CourseSerializerView
+
+
+    
+
+class PaymentDetailView(generics.ListAPIView):
+    queryset = PaymentDetail.objects.order_by('-uploaded_at')[:1]
+    serializer_class = PaymentDetailSerializer
 
 
 

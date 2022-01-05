@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
+from django.db.models import fields
 from rest_framework import serializers, status
-from .models import Course,CourseContent, Enrolled,Question
+
+from .models import Course,CourseContent, Enrolled,Question,PaymentDetail
 
 
 class CourseSerializerView(serializers.ModelSerializer):
@@ -9,7 +11,7 @@ class CourseSerializerView(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('course_name','grade','slug','description','original_fee','discount','is_premium','status')
+        fields = ('course_name','image','grade','slug','description','original_fee','discount','is_premium','status')
 
 
 # class CourseContentSerializerView(serializers.ModelSerializer):
@@ -64,13 +66,14 @@ class CourseSerializer(serializers.ModelSerializer):
 
 class CourseEnrolledSerializer(serializers.ModelSerializer):
     course_name = serializers.CharField(source='course.course_name')
+    image = serializers.ImageField(source='course.image')
     grade = serializers.CharField(source='course.grade')
     slug = serializers.CharField(source='course.slug')
     description = serializers.CharField(source='course.description')
 
     class Meta:
         model = Enrolled
-        fields = ['course_name','grade','slug','description','enrolled_at','paid']
+        fields = ['course_name','image','grade','slug','description','enrolled_at','paid']
 
 
 class StudentEnrolledSerializer(serializers.ModelSerializer):
@@ -100,3 +103,9 @@ class StudentEnrolledSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Bad Request")
 
         return attrs
+
+
+class PaymentDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentDetail
+        fields = '__all__'

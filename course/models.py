@@ -4,10 +4,16 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from studentnote.utils import unique_slug_generator
 from django_ckeditor_5.fields import CKEditor5Field
+import lxml.html
 
 
 # Create your models here.
 
+def upload_img(instance,filename):
+    return f'course_img/{filename}'
+
+def upload_payment_img(instance,filename):
+    return f'payment_img/{filename}'
 
 
 class Course(models.Model):
@@ -22,6 +28,7 @@ class Course(models.Model):
     )
 
     course_name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to=upload_img,default="course_img/default.jpg")
     slug = models.SlugField(max_length = 255, null = True, blank = True)
     grade = models.CharField(max_length=80)
     description = models.TextField()
@@ -72,6 +79,9 @@ class Question(models.Model):
     edited_by = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self) -> str:
+        return lxml.html.fromstring(self.question).text_content() if self.question else ''
+
 
 class Enrolled(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -83,3 +93,8 @@ class Enrolled(models.Model):
 
     def __str__(self) -> str:
         return f'{self.user.username} - {self.course.course_name}'
+
+
+class PaymentDetail(models.Model):
+    image = models.ImageField(upload_to=upload_payment_img,default="payment_img/default.jpg")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
