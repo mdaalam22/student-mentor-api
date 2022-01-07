@@ -8,14 +8,17 @@ from rest_framework.permissions import IsAuthenticated,IsAdminUser
 
 from authentication import serializers
 from course.admin import PaymentDetailAdmin
-from .models import Course, CourseContent, Enrolled,PaymentDetail
+from .models import Course, CourseContent, Enrolled,PaymentDetail, Question
 from .serializers import (
 CourseSerializerView,
 CourseSerializer,
 CourseContentSerializer,
 CourseEnrolledSerializer,
+QuestionSerializer,
 StudentEnrolledSerializer,
-PaymentDetailSerializer
+PaymentDetailSerializer,
+ChapterViewSerializer,
+SearchViewSerializer
 )
 from rest_framework.views import APIView
 from rest_framework.filters import OrderingFilter
@@ -24,7 +27,22 @@ from django.db.models import Count
 
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from rest_framework import filters
 # Create your views here.
+
+class MultipleFieldLookupMixin(object):
+   def get_object(self):
+
+       queryset = self.get_queryset()
+       queryset = self.filter_queryset(queryset)
+       filter = {}
+       for field in self.lookup_fields:
+           if self.kwargs.get(field, None):
+               filter[field] = self.kwargs[field]
+               obj = get_object_or_404(queryset, ** filter) # Lookup the object
+               self.check_object_permissions(self.request, obj)
+       return obj
 
 
 # == view to load chapter list of the selected course dynamically ==
@@ -153,6 +171,53 @@ class PopularCourseView(generics.ListAPIView):
     serializer_class = CourseSerializerView
 
 
+class QuestionView(MultipleFieldLookupMixin,generics.RetrieveAPIView):
+    queryset = Question.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = QuestionSerializer
+    lookup_fields = ['course_id','chapter_id','id']
+
+    def get_queryset(self):
+        user = self.request.user
+        course_id = self.kwargs['course_id']
+        chap_id = self.kwargs['chap_id']
+        ques_id = self.kwargs['ques_id']
+        if course_id and chap_id and ques_id:
+            try:
+                queryset = Question.objects.filter(id=ques_id,chapter_id=chap_id,course_id=course_id)
+            except:
+                return Response({'Chapter not found'},status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({
+                'Enter valid course_id,chapter_id and ques_id'
+            },status=status.HTTP_400_BAD_REQUEST)
+        
+        return queryset
+
+class ChapterView(generics.ListAPIView):
+    queryset = CourseContent.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChapterViewSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        course_id = self.kwargs['course_id']
+        chap_id = self.kwargs['chap_id']
+        if course_id and chap_id:
+            try:
+                queryset = CourseContent.objects.filter(id=chap_id,course_id=course_id)
+            except:
+                return Response({'Chapter not found'},status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({
+                'Enter valid course_id and chapter_id'
+            },status=status.HTTP_400_BAD_REQUEST)
+
+
+        return queryset
+
+
+
     
 
 class PaymentDetailView(generics.ListAPIView):
@@ -161,3 +226,9 @@ class PaymentDetailView(generics.ListAPIView):
 
 
 
+class SearchView(generics.ListAPIView):
+    queryset = Question.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = SearchViewSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['course__course_name','chapter__chapter_title','question']

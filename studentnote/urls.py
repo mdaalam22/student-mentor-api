@@ -23,6 +23,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path('grappelli/', include('grappelli.urls')), # grappelli URLS
     url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
     url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     path('admin/', admin.site.urls),
