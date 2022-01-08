@@ -45,6 +45,7 @@ AUTH_USER_MODEL = 'authentication.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dbbackup',
     'drf_yasg',
     'corsheaders',
     'rest_framework',
@@ -62,6 +64,13 @@ INSTALLED_APPS = [
     'course',
     'advertisement',
     'django_ckeditor_5',
+]
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR,'backup')}
+
+CRONJOBS = [
+    ('5 8 * * 0', 'studentnote.cron.schedule_db_backup')
 ]
 
 SWAGGER_SETTINGS = {

@@ -1,0 +1,547 @@
+-- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
+--
+-- Host: localhost    Database: studentmentor
+-- ------------------------------------------------------
+-- Server version	8.0.18
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `advertisement_advertisement`
+--
+
+DROP TABLE IF EXISTS `advertisement_advertisement`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `advertisement_advertisement` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `image` varchar(100) NOT NULL,
+  `priority` varchar(60) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `active` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `advertisement_advertisement`
+--
+
+LOCK TABLES `advertisement_advertisement` WRITE;
+/*!40000 ALTER TABLE `advertisement_advertisement` DISABLE KEYS */;
+INSERT INTO `advertisement_advertisement` VALUES (5,'demo 1','ads_img/sakibpic.jpg','low','2022-01-08 08:25:03.462442',1),(4,'demo','ads_img/sakibpic.jpg','low','2022-01-08 08:21:32.254094',1),(6,'demo 3','ads_img/php.jpg','low','2022-01-08 08:26:52.298563',1),(7,'demo 4','ads_img/sakibpic.jpg','low','2022-01-08 08:29:48.377967',1);
+/*!40000 ALTER TABLE `advertisement_advertisement` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_group`
+--
+
+DROP TABLE IF EXISTS `auth_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `auth_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(150) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_group`
+--
+
+LOCK TABLES `auth_group` WRITE;
+/*!40000 ALTER TABLE `auth_group` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_group_permissions`
+--
+
+DROP TABLE IF EXISTS `auth_group_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `auth_group_permissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` (`group_id`,`permission_id`),
+  KEY `auth_group_permissions_group_id_b120cbf9` (`group_id`),
+  KEY `auth_group_permissions_permission_id_84c5c92e` (`permission_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_group_permissions`
+--
+
+LOCK TABLES `auth_group_permissions` WRITE;
+/*!40000 ALTER TABLE `auth_group_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_group_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_permission`
+--
+
+DROP TABLE IF EXISTS `auth_permission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `auth_permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `content_type_id` int(11) NOT NULL,
+  `codename` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
+  KEY `auth_permission_content_type_id_2f476e4b` (`content_type_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_permission`
+--
+
+LOCK TABLES `auth_permission` WRITE;
+/*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
+INSERT INTO `auth_permission` VALUES (1,'Can add permission',1,'add_permission'),(2,'Can change permission',1,'change_permission'),(3,'Can delete permission',1,'delete_permission'),(4,'Can view permission',1,'view_permission'),(5,'Can add group',2,'add_group'),(6,'Can change group',2,'change_group'),(7,'Can delete group',2,'delete_group'),(8,'Can view group',2,'view_group'),(9,'Can add content type',3,'add_contenttype'),(10,'Can change content type',3,'change_contenttype'),(11,'Can delete content type',3,'delete_contenttype'),(12,'Can view content type',3,'view_contenttype'),(13,'Can add user',4,'add_user'),(14,'Can change user',4,'change_user'),(15,'Can delete user',4,'delete_user'),(16,'Can view user',4,'view_user'),(17,'Can add log entry',5,'add_logentry'),(18,'Can change log entry',5,'change_logentry'),(19,'Can delete log entry',5,'delete_logentry'),(20,'Can view log entry',5,'view_logentry'),(21,'Can add session',6,'add_session'),(22,'Can change session',6,'change_session'),(23,'Can delete session',6,'delete_session'),(24,'Can view session',6,'view_session'),(25,'Can add blacklisted token',7,'add_blacklistedtoken'),(26,'Can change blacklisted token',7,'change_blacklistedtoken'),(27,'Can delete blacklisted token',7,'delete_blacklistedtoken'),(28,'Can view blacklisted token',7,'view_blacklistedtoken'),(29,'Can add outstanding token',8,'add_outstandingtoken'),(30,'Can change outstanding token',8,'change_outstandingtoken'),(31,'Can delete outstanding token',8,'delete_outstandingtoken'),(32,'Can view outstanding token',8,'view_outstandingtoken'),(33,'Can add course',9,'add_course'),(34,'Can change course',9,'change_course'),(35,'Can delete course',9,'delete_course'),(36,'Can view course',9,'view_course'),(37,'Can add course content',10,'add_coursecontent'),(38,'Can change course content',10,'change_coursecontent'),(39,'Can delete course content',10,'delete_coursecontent'),(40,'Can view course content',10,'view_coursecontent'),(41,'Can add question',11,'add_question'),(42,'Can change question',11,'change_question'),(43,'Can delete question',11,'delete_question'),(44,'Can view question',11,'view_question'),(45,'Can add enrolled',12,'add_enrolled'),(46,'Can change enrolled',12,'change_enrolled'),(47,'Can delete enrolled',12,'delete_enrolled'),(48,'Can view enrolled',12,'view_enrolled'),(49,'Can add advertisement',13,'add_advertisement'),(50,'Can change advertisement',13,'change_advertisement'),(51,'Can delete advertisement',13,'delete_advertisement'),(52,'Can view advertisement',13,'view_advertisement'),(53,'Can add payment detail',14,'add_paymentdetail'),(54,'Can change payment detail',14,'change_paymentdetail'),(55,'Can delete payment detail',14,'delete_paymentdetail'),(56,'Can view payment detail',14,'view_paymentdetail');
+/*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `authentication_user`
+--
+
+DROP TABLE IF EXISTS `authentication_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `authentication_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `password` varchar(128) NOT NULL,
+  `last_login` datetime(6) DEFAULT NULL,
+  `is_superuser` tinyint(1) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone_number` varchar(20) NOT NULL,
+  `image` varchar(100) NOT NULL,
+  `is_verified` tinyint(1) NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `is_staff` tinyint(1) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `auth_provider` varchar(255) NOT NULL,
+  `name` varchar(60) NOT NULL,
+  `address` varchar(60) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `institute` varchar(255) DEFAULT NULL,
+  `course_name` varchar(60) DEFAULT NULL,
+  `level` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `authentication_user`
+--
+
+LOCK TABLES `authentication_user` WRITE;
+/*!40000 ALTER TABLE `authentication_user` DISABLE KEYS */;
+INSERT INTO `authentication_user` VALUES (1,'pbkdf2_sha256$150000$IQhVLBZq6kUr$vSvF0VyqDJ9sHrqbA3DeyTn3lsAU3F9ba5ak8yPqWRs=',NULL,0,'saadk2','me.saadkhan66@gmail.com','9814732857','profile_img/default.jpg',1,1,0,'2021-12-28 11:37:05.321533','2022-01-04 17:14:46.648796','email','Saad Khan',NULL,NULL,NULL,NULL,NULL),(4,'pbkdf2_sha256$150000$reYGZLOkjxks$vZ4XaeGIIkkz62DDic4h1GUB2rKBeph4ibPsPmQ08Ms=',NULL,0,'testme','test@test.com','98233483923','profile_img/default.jpg',1,1,0,'2022-01-04 17:19:02.029102','2022-01-04 17:22:12.732066','email','Test Me','Kathmandu','2000-12-12','Nepali It club','IT','plus 2'),(3,'pbkdf2_sha256$150000$Ct4CoXo6aVQp$0O2epkrX+zE9Uu2UmwtiO5cI2BLVOpQ/Ct646V5MB7U=','2022-01-08 08:53:24.827863',1,'mdaalam22','mdmaalam22@gmail.com','9814732857','image.png',0,1,1,'2022-01-04 17:16:57.348268','2022-01-04 17:16:57.350258','email','Md M Aalam',NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `authentication_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `authentication_user_groups`
+--
+
+DROP TABLE IF EXISTS `authentication_user_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `authentication_user_groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `authentication_user_groups_user_id_group_id_8af031ac_uniq` (`user_id`,`group_id`),
+  KEY `authentication_user_groups_user_id_30868577` (`user_id`),
+  KEY `authentication_user_groups_group_id_6b5c44b7` (`group_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `authentication_user_groups`
+--
+
+LOCK TABLES `authentication_user_groups` WRITE;
+/*!40000 ALTER TABLE `authentication_user_groups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `authentication_user_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `authentication_user_user_permissions`
+--
+
+DROP TABLE IF EXISTS `authentication_user_user_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `authentication_user_user_permissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `authentication_user_user_user_id_permission_id_ec51b09f_uniq` (`user_id`,`permission_id`),
+  KEY `authentication_user_user_permissions_user_id_736ebf7e` (`user_id`),
+  KEY `authentication_user_user_permissions_permission_id_ea6be19a` (`permission_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `authentication_user_user_permissions`
+--
+
+LOCK TABLES `authentication_user_user_permissions` WRITE;
+/*!40000 ALTER TABLE `authentication_user_user_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `authentication_user_user_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `course_course`
+--
+
+DROP TABLE IF EXISTS `course_course`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `course_course` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `course_name` varchar(255) NOT NULL,
+  `grade` varchar(80) NOT NULL,
+  `description` longtext NOT NULL,
+  `original_fee` double NOT NULL,
+  `discount` double NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `status` varchar(30) NOT NULL,
+  `author_id` int(11) NOT NULL,
+  `slug` varchar(255) DEFAULT NULL,
+  `is_premium` tinyint(1) NOT NULL,
+  `image` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `course_course_author_id_fdf51ea4` (`author_id`),
+  KEY `course_course_slug_8ca9d9ef` (`slug`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `course_course`
+--
+
+LOCK TABLES `course_course` WRITE;
+/*!40000 ALTER TABLE `course_course` DISABLE KEYS */;
+INSERT INTO `course_course` VALUES (1,'Lean Python','plus 2','This is python course for beginner',0,0,'2022-01-04 17:43:27.142427','2022-01-04 17:43:27.142427','published',3,'lean-python',0,'course_img/default.jpg'),(2,'Java for everyone','Bachelor','Java course for beginner to advance',1200,10,'2022-01-04 17:45:30.811599','2022-01-04 17:45:30.812598','published',3,'java-for-everyone',1,'course_img/java.png'),(3,'Physics 11','class 11','Physics of ISC',0,0,'2022-01-05 17:28:13.239206','2022-01-08 08:34:14.252065','published',3,'physics-11',0,'course_img/mathlearn.jpg');
+/*!40000 ALTER TABLE `course_course` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `course_coursecontent`
+--
+
+DROP TABLE IF EXISTS `course_coursecontent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `course_coursecontent` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `chapter_title` varchar(255) NOT NULL,
+  `course_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `course_coursecontent_course_id_e75dd487` (`course_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `course_coursecontent`
+--
+
+LOCK TABLES `course_coursecontent` WRITE;
+/*!40000 ALTER TABLE `course_coursecontent` DISABLE KEYS */;
+INSERT INTO `course_coursecontent` VALUES (1,'Intro to python',1),(2,'Variable in python',1),(3,'List in python',1),(4,'Intro to Java',2),(5,'Variable in Java',2),(6,'Measurement',3),(7,'Work',3),(8,'Force',3);
+/*!40000 ALTER TABLE `course_coursecontent` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `course_enrolled`
+--
+
+DROP TABLE IF EXISTS `course_enrolled`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `course_enrolled` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `course_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `enrolled_at` datetime(6) NOT NULL,
+  `paid` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `course_enrolled_course_id_1a643e27` (`course_id`),
+  KEY `course_enrolled_user_id_1856288b` (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `course_enrolled`
+--
+
+LOCK TABLES `course_enrolled` WRITE;
+/*!40000 ALTER TABLE `course_enrolled` DISABLE KEYS */;
+INSERT INTO `course_enrolled` VALUES (1,1,1,'2022-01-04 17:58:38.351875',0),(2,2,1,'2022-01-04 17:59:02.551150',1);
+/*!40000 ALTER TABLE `course_enrolled` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `course_paymentdetail`
+--
+
+DROP TABLE IF EXISTS `course_paymentdetail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `course_paymentdetail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `image` varchar(100) NOT NULL,
+  `uploaded_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `course_paymentdetail`
+--
+
+LOCK TABLES `course_paymentdetail` WRITE;
+/*!40000 ALTER TABLE `course_paymentdetail` DISABLE KEYS */;
+INSERT INTO `course_paymentdetail` VALUES (1,'payment_img/default.jpg','2022-01-04 18:52:55.815450'),(2,'payment_img/glass.jpeg','2022-01-04 18:58:07.235424');
+/*!40000 ALTER TABLE `course_paymentdetail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `course_question`
+--
+
+DROP TABLE IF EXISTS `course_question`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `course_question` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `question` longtext NOT NULL,
+  `answer` longtext NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `chapter_id` int(11) NOT NULL,
+  `edited_by_id` int(11) DEFAULT NULL,
+  `course_id` bigint(20) NOT NULL,
+  `can_view` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `course_question_chapter_id_95b0096e` (`chapter_id`),
+  KEY `course_question_edited_by_id_9b69a71a` (`edited_by_id`),
+  KEY `course_question_course_id_c002d33c` (`course_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `course_question`
+--
+
+LOCK TABLES `course_question` WRITE;
+/*!40000 ALTER TABLE `course_question` DISABLE KEYS */;
+INSERT INTO `course_question` VALUES (1,'<p>What is Python?</p>','<p>Python is general purpose programming language</p>','2022-01-04 17:48:51.943659',1,3,1,0),(2,'<p>what is Java</p>','<p>Java is programming language</p>','2022-01-04 17:54:00.618663',4,3,2,1),(3,'<p><strong>Everything is object in Java why?</strong></p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>','<p>Everything is <strong>object</strong> in Java</p><p>&nbsp;</p><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mi>a</mi><mo>-</mo><mfrac><mi>b</mi><mi>n</mi></mfrac></mrow></math></p>','2022-01-04 17:54:00.621665',4,3,2,0),(4,'<p>hello</p>','<p>hello</p>','2022-01-04 20:57:03.116947',2,3,1,0),(5,'<p>What is Variable</p>','<p><span style=\"background-color:rgb(255,255,255);color:rgb(32,33,36);\">Variable in Java is </span><strong>a data container that saves the data values during Java program execution</strong><span style=\"background-color:rgb(255,255,255);color:rgb(32,33,36);\">. Every variable is assigned a data type that designates the type and quantity of value it can hold.</span></p>','2022-01-05 17:06:40.791525',5,3,2,0),(6,'<p>What is Measurement?</p>','<p><span style=\"background-color:rgb(255,255,255);color:rgb(32,33,36);\">MEASUREMENT\" is </span><strong>the determination of the size or magnitude of something</strong><span style=\"background-color:rgb(255,255,255);color:rgb(32,33,36);\">. By comparing that unknown quantity with some standard quantity of equal nature, known as measurement unit. Measurement can also be defined as \"Comparison of an unknown quantity with some known quantity of the same kind\".</span></p><figure class=\"image image-style-align-left\"><img src=\"/media/django_ckeditor_5/mathlearn.jpg\"></figure>','2022-01-05 17:32:10.085981',6,3,3,0),(7,'<p>List Comprehesive in python 2</p>','<p>List Comprehension in python</p><pre><code class=\"language-python\">[output_expression for variable in input_sequence if filter_condition] </code></pre><p>&nbsp;</p><figure class=\"image image-style-align-left\"><img src=\"/media/django_ckeditor_5/flask_41ZsvzU.png\"></figure>','2022-01-08 09:34:17.328445',3,3,1,1),(8,'<p>What is work</p>','<p><span style=\"background-color:rgb(255,255,255);color:rgb(32,33,36);\">work, in physics, </span><strong>measure of energy transfer that occurs when an object is moved over a distance by an external force at least part of</strong><span style=\"background-color:rgb(255,255,255);color:rgb(32,33,36);\"> which is applied in the direction of the displacement</span></p><figure class=\"image image-style-align-left image_resized\" style=\"width:24.24%;\"><img src=\"/media/django_ckeditor_5/ER_Term.PNG\"></figure>','2022-01-08 10:41:16.843945',7,3,3,1);
+/*!40000 ALTER TABLE `course_question` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_admin_log`
+--
+
+DROP TABLE IF EXISTS `django_admin_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `django_admin_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `action_time` datetime(6) NOT NULL,
+  `object_id` longtext,
+  `object_repr` varchar(200) NOT NULL,
+  `action_flag` smallint(5) unsigned NOT NULL,
+  `change_message` longtext NOT NULL,
+  `content_type_id` int(11) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `django_admin_log_content_type_id_c4bce8eb` (`content_type_id`),
+  KEY `django_admin_log_user_id_c564eba6` (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_admin_log`
+--
+
+LOCK TABLES `django_admin_log` WRITE;
+/*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
+INSERT INTO `django_admin_log` VALUES (1,'2022-01-04 17:18:17.839530','2','testme',3,'',4,3),(2,'2022-01-04 17:20:13.972468','4','testme',2,'[{\"changed\": {\"fields\": [\"is_verified\"]}}]',4,3),(3,'2022-01-04 17:43:27.154428','1','Lean Python',1,'[{\"added\": {}}, {\"added\": {\"name\": \"course content\", \"object\": \"Intro to python\"}}, {\"added\": {\"name\": \"course content\", \"object\": \"Variable in python\"}}, {\"added\": {\"name\": \"course content\", \"object\": \"List in python\"}}]',9,3),(4,'2022-01-04 17:45:30.820602','2','Java for everyone',1,'[{\"added\": {}}, {\"added\": {\"name\": \"course content\", \"object\": \"Intro to Java\"}}, {\"added\": {\"name\": \"course content\", \"object\": \"Variable in Java\"}}]',9,3),(5,'2022-01-04 17:48:51.947660','1','Intro to python',2,'[{\"added\": {\"name\": \"question\", \"object\": \"Question object (1)\"}}]',10,3),(6,'2022-01-04 17:54:00.623667','4','Intro to Java',2,'[{\"added\": {\"name\": \"question\", \"object\": \"Question object (2)\"}}, {\"added\": {\"name\": \"question\", \"object\": \"Question object (3)\"}}]',10,3),(7,'2022-01-04 18:48:19.907828','1','PaymentDetail object (1)',1,'[{\"added\": {}}]',14,3),(8,'2022-01-04 18:58:07.238422','2','PaymentDetail object (2)',1,'[{\"added\": {}}]',14,3),(9,'2022-01-04 20:57:03.118943','4','hello',1,'[{\"added\": {}}]',11,3),(10,'2022-01-05 17:06:40.809525','5','What is Variable',1,'[{\"added\": {}}]',11,3),(11,'2022-01-05 17:28:13.269215','3','Physics 11',1,'[{\"added\": {}}, {\"added\": {\"name\": \"course content\", \"object\": \"Measurement\"}}, {\"added\": {\"name\": \"course content\", \"object\": \"Work\"}}]',9,3),(12,'2022-01-05 17:32:10.089984','6','What is Measurement?',1,'[{\"added\": {}}]',11,3),(13,'2022-01-07 20:27:40.592042','3','Ev erything is object in Java why?     ',2,'[{\"changed\": {\"fields\": [\"question\", \"answer\"]}}]',11,3),(14,'2022-01-07 20:28:06.826141','3','Everything is object in Java why?     ',2,'[{\"changed\": {\"fields\": [\"question\"]}}]',11,3),(15,'2022-01-07 20:36:44.530053','3','Physics 11',2,'[{\"added\": {\"name\": \"course content\", \"object\": \"Force\"}}]',9,3),(16,'2022-01-08 07:52:02.733343','2','saadk2 - Java for everyone',2,'[{\"changed\": {\"fields\": [\"paid\"]}}]',12,3),(17,'2022-01-08 08:19:13.889032','2','Demo',3,'',13,3),(18,'2022-01-08 08:19:13.891032','1','Demo',3,'',13,3),(19,'2022-01-08 08:21:08.816910','3','demo',3,'',13,3),(20,'2022-01-08 08:25:03.604435','5','demo 1',1,'[{\"added\": {}}]',13,3),(21,'2022-01-08 08:26:52.366558','6','demo 3',1,'[{\"added\": {}}]',13,3),(22,'2022-01-08 08:29:48.538961','7','demo 4',1,'[{\"added\": {}}]',13,3),(23,'2022-01-08 08:31:47.556404','7','demo 4',2,'[{\"changed\": {\"fields\": [\"image\"]}}]',13,3),(24,'2022-01-08 08:34:14.276059','3','Physics 11',2,'[{\"changed\": {\"fields\": [\"image\"]}}]',9,3),(25,'2022-01-08 09:34:17.429442','7','List Comprehesion in python',1,'[{\"added\": {}}]',11,3),(26,'2022-01-08 09:39:52.614053','7','List Comprehesive in python',2,'[{\"changed\": {\"fields\": [\"question\"]}}]',11,3),(27,'2022-01-08 09:42:06.101008','7','List Comprehesive in python 2',2,'[{\"changed\": {\"fields\": [\"question\"]}}]',11,3),(28,'2022-01-08 09:43:39.874237','7','List Comprehesive in python',2,'[{\"changed\": {\"fields\": [\"question\"]}}]',11,3),(29,'2022-01-08 09:49:20.097583','7','List Comprehesive in python 2',2,'[{\"changed\": {\"fields\": [\"question\"]}}]',11,3),(30,'2022-01-08 09:50:27.183967','7','List Comprehesive in python',2,'[{\"changed\": {\"fields\": [\"question\"]}}]',11,3),(31,'2022-01-08 09:54:28.224930','7','List Comprehesive in python 2',2,'[]',11,3),(32,'2022-01-08 10:21:42.698101','7','List Comprehesive in python',2,'[{\"changed\": {\"fields\": [\"question\"]}}]',11,3),(33,'2022-01-08 10:23:11.452724','7','List Comprehesive in python 2',2,'[{\"changed\": {\"fields\": [\"question\"]}}]',11,3),(34,'2022-01-08 10:41:17.597947','8','What is work',1,'[{\"added\": {}}]',11,3),(35,'2022-01-08 10:43:03.003366','8','What is work',2,'[{\"changed\": {\"fields\": [\"answer\"]}}]',11,3);
+/*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_content_type`
+--
+
+DROP TABLE IF EXISTS `django_content_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `django_content_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app_label` varchar(100) NOT NULL,
+  `model` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_content_type`
+--
+
+LOCK TABLES `django_content_type` WRITE;
+/*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
+INSERT INTO `django_content_type` VALUES (1,'auth','permission'),(2,'auth','group'),(3,'contenttypes','contenttype'),(4,'authentication','user'),(5,'admin','logentry'),(6,'sessions','session'),(7,'token_blacklist','blacklistedtoken'),(8,'token_blacklist','outstandingtoken'),(9,'course','course'),(10,'course','coursecontent'),(11,'course','question'),(12,'course','enrolled'),(13,'advertisement','advertisement'),(14,'course','paymentdetail');
+/*!40000 ALTER TABLE `django_content_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_migrations`
+--
+
+DROP TABLE IF EXISTS `django_migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `django_migrations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `applied` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_migrations`
+--
+
+LOCK TABLES `django_migrations` WRITE;
+/*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2021-12-28 11:27:25.398508'),(2,'contenttypes','0002_remove_content_type_name','2021-12-28 11:27:40.590135'),(3,'auth','0001_initial','2021-12-28 11:27:40.851126'),(4,'auth','0002_alter_permission_name_max_length','2021-12-28 11:27:44.429181'),(5,'auth','0003_alter_user_email_max_length','2021-12-28 11:27:44.449178'),(6,'auth','0004_alter_user_username_opts','2021-12-28 11:27:44.471181'),(7,'auth','0005_alter_user_last_login_null','2021-12-28 11:27:44.494181'),(8,'auth','0006_require_contenttypes_0002','2021-12-28 11:27:44.499191'),(9,'auth','0007_alter_validators_add_error_messages','2021-12-28 11:27:44.519184'),(10,'auth','0008_alter_user_username_max_length','2021-12-28 11:27:44.534182'),(11,'auth','0009_alter_user_last_name_max_length','2021-12-28 11:27:44.554180'),(12,'auth','0010_alter_group_name_max_length','2021-12-28 11:27:44.895179'),(13,'auth','0011_update_proxy_permissions','2021-12-28 11:27:44.922179'),(14,'authentication','0001_initial','2021-12-28 11:33:07.075195'),(15,'authentication','0002_user_name','2021-12-28 11:33:12.123551'),(16,'authentication','0003_auto_20211227_1624','2021-12-28 11:33:13.842320'),(17,'authentication','0004_auto_20211227_1657','2021-12-28 11:33:13.925320'),(18,'admin','0001_initial','2021-12-28 11:33:34.822791'),(19,'admin','0002_logentry_remove_auto_add','2021-12-28 11:33:37.327404'),(20,'admin','0003_logentry_add_action_flag_choices','2021-12-28 11:33:37.354393'),(21,'advertisement','0001_initial','2021-12-28 11:33:37.507964'),(22,'advertisement','0002_advertisement_active','2021-12-28 11:33:38.327913'),(23,'course','0001_initial','2021-12-28 11:33:38.546912'),(24,'course','0002_course_slug','2021-12-28 11:33:40.478170'),(25,'course','0003_coursecontent_question','2021-12-28 11:33:41.240117'),(26,'course','0004_question_course','2021-12-28 11:33:44.692920'),(27,'course','0005_enrolled','2021-12-28 11:33:45.600241'),(28,'course','0006_auto_20211210_1058','2021-12-28 11:33:47.675680'),(29,'course','0007_enrolled_enrolled_at','2021-12-28 11:33:48.266044'),(30,'course','0008_auto_20211217_1724','2021-12-28 11:33:48.344032'),(31,'course','0009_auto_20211220_2200','2021-12-28 11:33:49.835092'),(32,'course','0010_course_is_premium','2021-12-28 11:33:50.467096'),(33,'sessions','0001_initial','2021-12-28 11:33:50.658277'),(34,'token_blacklist','0001_initial','2021-12-28 11:33:52.319519'),(35,'token_blacklist','0002_outstandingtoken_jti_hex','2021-12-28 11:33:54.779431'),(36,'token_blacklist','0003_auto_20171017_2007','2021-12-28 11:33:54.831440'),(37,'token_blacklist','0004_auto_20171017_2013','2021-12-28 11:33:55.843189'),(38,'token_blacklist','0005_remove_outstandingtoken_jti','2021-12-28 11:33:56.367390'),(39,'token_blacklist','0006_auto_20171017_2113','2021-12-28 11:33:56.567078'),(40,'token_blacklist','0007_auto_20171017_2214','2021-12-28 11:33:57.952815'),(41,'token_blacklist','0008_migrate_to_bigautofield','2021-12-28 11:34:00.115936'),(42,'token_blacklist','0010_fix_migrate_to_bigautofield','2021-12-28 11:34:00.168941'),(43,'token_blacklist','0011_linearizes_history','2021-12-28 11:34:00.175932'),(44,'advertisement','0003_auto_20220104_2236','2022-01-04 16:52:29.482558'),(45,'authentication','0005_auto_20220104_2236','2022-01-04 16:52:46.463292'),(46,'course','0011_auto_20220104_2236','2022-01-04 16:52:52.187052'),(47,'course','0012_course_image','2022-01-04 17:40:58.626869'),(48,'course','0013_paymentdetail','2022-01-04 18:47:21.722702'),(49,'course','0014_paymentdetail_uploaded_at','2022-01-04 18:53:08.265432'),(50,'course','0015_auto_20220108_0220','2022-01-07 20:35:22.422778');
+/*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `django_session`
+--
+
+DROP TABLE IF EXISTS `django_session`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `django_session` (
+  `session_key` varchar(40) NOT NULL,
+  `session_data` longtext NOT NULL,
+  `expire_date` datetime(6) NOT NULL,
+  PRIMARY KEY (`session_key`),
+  KEY `django_session_expire_date_a5c62663` (`expire_date`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `django_session`
+--
+
+LOCK TABLES `django_session` WRITE;
+/*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
+INSERT INTO `django_session` VALUES ('9cmsw6mtii83fnrfjtuobvochajm7cb8','ZDFiMWY5NzllMWU2YjUwNGI4OTQ3Mjg5ZDhiOTYyNTgwYTU2MTZlNDp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJmZjEzYzJkZGI0MDA3YzkzNmNjOWIwMWRkZGUyMzRkZThkNzg5YjMwIn0=','2022-01-21 20:32:17.057201'),('5ere0f8df124kmgw2xu9vamj9zd0159r','ZDFiMWY5NzllMWU2YjUwNGI4OTQ3Mjg5ZDhiOTYyNTgwYTU2MTZlNDp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJmZjEzYzJkZGI0MDA3YzkzNmNjOWIwMWRkZGUyMzRkZThkNzg5YjMwIn0=','2022-01-22 08:53:24.834859');
+/*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `token_blacklist_blacklistedtoken`
+--
+
+DROP TABLE IF EXISTS `token_blacklist_blacklistedtoken`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `token_blacklist_blacklistedtoken` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `blacklisted_at` datetime(6) NOT NULL,
+  `token_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token_id` (`token_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `token_blacklist_blacklistedtoken`
+--
+
+LOCK TABLES `token_blacklist_blacklistedtoken` WRITE;
+/*!40000 ALTER TABLE `token_blacklist_blacklistedtoken` DISABLE KEYS */;
+/*!40000 ALTER TABLE `token_blacklist_blacklistedtoken` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `token_blacklist_outstandingtoken`
+--
+
+DROP TABLE IF EXISTS `token_blacklist_outstandingtoken`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `token_blacklist_outstandingtoken` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `token` longtext NOT NULL,
+  `created_at` datetime(6) DEFAULT NULL,
+  `expires_at` datetime(6) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `jti` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token_blacklist_outstandingtoken_jti_hex_d9bdf6f7_uniq` (`jti`),
+  KEY `token_blacklist_outstandingtoken_user_id_83bc629a` (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `token_blacklist_outstandingtoken`
+--
+
+LOCK TABLES `token_blacklist_outstandingtoken` WRITE;
+/*!40000 ALTER TABLE `token_blacklist_outstandingtoken` DISABLE KEYS */;
+INSERT INTO `token_blacklist_outstandingtoken` VALUES (1,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY0MDc3NzgyNSwiaWF0IjoxNjQwNjkxNDI1LCJqdGkiOiI1N2ViY2ZlMGIwZmY0MzE2OTBhZmZkNDE2NDZhMzNjYSIsInVzZXJfaWQiOjF9.EZkKwRlRedSlMxDEP1zQJV72IOVR_1Vz4X-u7oHIadA','2021-12-28 11:37:05.329536','2021-12-29 11:37:05.000000',1,'57ebcfe0b0ff431690affd41646a33ca'),(3,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY0MTQwMzE0MiwiaWF0IjoxNjQxMzE2NzQyLCJqdGkiOiJlZjc2NTcxODkzMTM0MDViYTRiMjk0ZWFiZWMwNWZjZSIsInVzZXJfaWQiOjR9.4WVBUcKCTpjwXOYA5SAJUW_1wlFXgu-4ekcZwwrXPxs','2022-01-04 17:19:02.042100','2022-01-05 17:19:02.000000',4,'ef7657189313405ba4b294eabec05fce'),(4,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY0MTQwMzIyNCwiaWF0IjoxNjQxMzE2ODI0LCJqdGkiOiIwNDhjZTVlNjdiZjY0Zjk3YmNmMDBhNzBkMmIxMDQyMSIsInVzZXJfaWQiOjR9.B1KVleClfx-BcTKVN2XIWX0KgOzrOuLl5ZavYACb_gM','2022-01-04 17:20:24.804726','2022-01-05 17:20:24.000000',4,'048ce5e67bf64f97bcf00a70d2b10421'),(5,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY0MTQwMzIyNCwiaWF0IjoxNjQxMzE2ODI0LCJqdGkiOiI0Yzk5NWNiMTgzMTM0MjM2YjUwOTgyZjU0NTc3MDc5MCIsInVzZXJfaWQiOjR9.7AHlCO8TUPvNDzuQUxymiMsMs2UVV4S5TDIfhTTZk_E','2022-01-04 17:20:24.827723','2022-01-05 17:20:24.000000',4,'4c995cb183134236b50982f545770790'),(6,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY0MTQwNTM5NCwiaWF0IjoxNjQxMzE4OTk0LCJqdGkiOiJiMGZhYTFkNzU4MDA0OWMwYTJiY2ZmMzkzYzc4ZThlNiIsInVzZXJfaWQiOjF9.LKmeigX3OEDPoXwY0TCPD2ADE_szZ0ScfwEcgfc5Rfw','2022-01-04 17:56:34.572416','2022-01-05 17:56:34.000000',1,'b0faa1d7580049c0a2bcff393c78e8e6'),(7,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY0MTQwNTM5NCwiaWF0IjoxNjQxMzE4OTk0LCJqdGkiOiIyMjJkNmZkMGFiMmQ0ZWM1ODBhOGQ3ZjM0MjBlYTJmZSIsInVzZXJfaWQiOjF9.vLut1TR6jtjoA__ZKLLBdKGFLCIW3hDSUc4rrbwsxGo','2022-01-04 17:56:34.602416','2022-01-05 17:56:34.000000',1,'222d6fd0ab2d4ec580a8d7f3420ea2fe'),(8,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY0MTY2MDQ4NiwiaWF0IjoxNjQxNTc0MDg2LCJqdGkiOiJmMWUwZGExZGI4ZGQ0ZWM3ODMwNGZhNDU0ZmZhNDRjYSIsInVzZXJfaWQiOjF9.Ut8EchecKeEhlCrPHyh_AolDGfjTYyd0b2mpzYmEEKM','2022-01-07 16:48:06.648404','2022-01-08 16:48:06.000000',1,'f1e0da1db8dd4ec78304fa454ffa44ca'),(9,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY0MTY2MDQ4NiwiaWF0IjoxNjQxNTc0MDg2LCJqdGkiOiJmNTU0Y2MzNjU2YjY0ZTA3OGRjNjg5MDJlM2FlOWVjNyIsInVzZXJfaWQiOjF9.qIuj1wPnn3uvUDSa-ZBhxzMMdwNnvQ9moFk5kfkwgl0','2022-01-07 16:48:06.733403','2022-01-08 16:48:06.000000',1,'f554cc3656b64e078dc68902e3ae9ec7');
+/*!40000 ALTER TABLE `token_blacklist_outstandingtoken` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2022-01-08 19:53:38
