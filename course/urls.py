@@ -10,6 +10,9 @@ StudentEnrolledView,
 NewCourseView,
 PopularCourseView,
 PaymentDetailView,
+ChapterView,
+QuestionView,
+SearchView,
 chapter_list
 )
 
@@ -26,5 +29,8 @@ urlpatterns = [
     path('new-course/',NewCourseView.as_view(),name='new-course'),
     path('popular-course/',PopularCourseView.as_view(),name='popular-course'),
     path('payment-detail/',PaymentDetailView.as_view(),name='payment-detail'),
+    path('<int:course_id>/<int:chap_id>/',ChapterView.as_view(),name='get-chapter'),
+    path('<int:course_id>/<int:chap_id>/<int:ques_id>/',QuestionView.as_view(),name='get-question'),
+    path('search/',SearchView.as_view(),name='search'),
     path('chapter-list/<int:course_id>',chapter_list,name='chapter_list'),
 ]

@@ -22,24 +22,53 @@ class CourseSerializerView(serializers.ModelSerializer):
 #         model = Course
 #         fields = ['course_name','grade','description','course_contents','questions']
 
+class SearchViewSerializer(serializers.ModelSerializer):
+    course_id = serializers.IntegerField(source='course.id')
+    course_name = serializers.CharField(source='course.course_name')
+    course_slug = serializers.SlugField(source='course.slug')
+    chapter_id = serializers.IntegerField(source='chapter.id')
+    chapter_title = serializers.CharField(source='chapter.chapter_title')
+    ques_id = serializers.IntegerField(source='id')
+    class Meta:
+        model = Question
+        fields = ['course_id','course_name','course_slug','chapter_id','chapter_title','ques_id','question']
+    
+    def to_representation(self, data):
+        data = super(SearchViewSerializer, self).to_representation(data)
+        query = self.context.get('request').query_params.get('search')
+        if not Course.objects.filter(id=data['course_id'],course_name__icontains=query):
+            data['course_name'] = None
+            data['course_slug'] = None
+        if not CourseContent.objects.filter(id=data['chapter_id'],chapter_title__icontains=query):
+            data['chapter_title'] = None
+        
+        if not Question.objects.filter(id=data['ques_id'],question__icontains=query):
+            data['question'] = None
+        
+        return data
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['id','question','answer','can_view','course']
+        fields = ['id','question','answer','can_view','course','chapter']
 
     def to_representation(self, data):
         data = super(QuestionSerializer, self).to_representation(data)
         try:
             is_course = Course.courseobjects.get(id=data['course'])
-            enrolled = Enrolled.objects.get(user=self.context['request'].user,course=is_course)
-            if is_course.is_premium_course():
-                if enrolled.paid:
+            enrolled = Enrolled.objects.filter(user=self.context['request'].user,course=is_course).first()
+            if enrolled:
+                if is_course.is_premium_course():
+                    if enrolled.paid:
+                        data['can_view'] = True
+                    elif not data['can_view']:
+                        data['answer'] = 'premium'
+                else:
                     data['can_view'] = True
-                elif not data['can_view']:
-                    data['answer'] = 'premium'
             else:
-                data['can_view'] = True
+                data['can_view'] = False
+                data['answer'] = 'not_enrolled'
         except:
             raise serializers.ValidationError("Something went wrong")
         return data
@@ -103,6 +132,16 @@ class StudentEnrolledSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Bad Request")
 
         return attrs
+
+
+class ChapterViewSerializer(serializers.ModelSerializer):
+    course_id = serializers.IntegerField(source='course.id')
+    course_name = serializers.CharField(source='course.course_name')
+    is_premium = serializers.BooleanField(source='course.is_premium')
+    questions = QuestionSerializer(many=True, read_only=True)
+    class Meta:
+        model = CourseContent
+        fields = ['course_id','course_name','is_premium','id','chapter_title','questions']
 
 
 class PaymentDetailSerializer(serializers.ModelSerializer):

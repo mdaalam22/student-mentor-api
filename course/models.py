@@ -5,7 +5,10 @@ from django.dispatch import receiver
 from studentnote.utils import unique_slug_generator
 from django_ckeditor_5.fields import CKEditor5Field
 import lxml.html
-
+from PIL import Image
+from bs4 import BeautifulSoup
+from django.conf import settings
+import os
 
 # Create your models here.
 
@@ -32,8 +35,8 @@ class Course(models.Model):
     slug = models.SlugField(max_length = 255, null = True, blank = True)
     grade = models.CharField(max_length=80)
     description = models.TextField()
-    original_fee = models.FloatField()
-    discount = models.FloatField()
+    original_fee = models.FloatField(default=0)
+    discount = models.FloatField(default=0)
     author = models.ForeignKey(User,on_delete=models.CASCADE,related_name='courses')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -54,6 +57,11 @@ class Course(models.Model):
 
     def is_premium_course(self):
         return self.is_premium
+    
+    def save(self, *args, **kwargs):
+       super(Course, self).save(*args, **kwargs)
+       image = Image.open(self.image.path)
+       image.save(self.image.path,quality=20,optimize=True)
 
 
 @receiver(pre_save, sender=Course)
@@ -69,6 +77,16 @@ class CourseContent(models.Model):
     def __str__(self) -> str:
         return self.chapter_title
 
+def findImageToCompress(html_text):
+    soup = BeautifulSoup(html_text, 'html.parser')
+    try:
+        for item in soup.find_all('img'):
+            image_path=os.path.join(settings.MEDIA_ROOT,item['src'][7:])
+            image = Image.open(image_path)
+            image.save(image_path,quality=20,optimize=True)
+
+    except:
+        pass
 
 class Question(models.Model):
     course = models.ForeignKey(Course,on_delete=models.CASCADE,related_name='course_ques')
@@ -81,6 +99,11 @@ class Question(models.Model):
 
     def __str__(self) -> str:
         return lxml.html.fromstring(self.question).text_content() if self.question else ''
+
+    def save(self, *args, **kwargs):
+       super(Question, self).save(*args, **kwargs)
+       findImageToCompress(self.question)
+       findImageToCompress(self.answer)
 
 
 class Enrolled(models.Model):

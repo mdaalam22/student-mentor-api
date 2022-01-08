@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 import os
+
 from authentication.pass_validators import SymbolValidator
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 env = environ.Env(
@@ -34,7 +35,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = 'django-insecure-=@_ziamd@@y!%26(swrkhf6mn1v4m7p=y$!vjcwh$rbx7@o)g9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -44,6 +45,7 @@ AUTH_USER_MODEL = 'authentication.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -106,6 +108,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'studentnote.wsgi.application'
 
 
+#Graphelli settings
+GRAPPELLI_ADMIN_TITLE = 'ISc Mentor Admin'
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -134,6 +139,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'NON_FIELD_ERRORS_KEY':'error',
+    'EXCEPTION_HANDLER' : 'utils.exceptionhandler.custum_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
