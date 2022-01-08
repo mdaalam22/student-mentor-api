@@ -6,8 +6,9 @@ from drf_yasg import openapi
 from django.conf import settings
 from django.conf.urls.static import static
 
-from django.conf.urls import url
+from django.conf.urls import handler400, url
 from django.views.static import serve
+from utils.views import error_404,error_500
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -36,6 +37,9 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+
+handler400 = error_404
+handler500 = error_500
 
 
 admin.site.site_header  =  "Student Mentor admin"  
