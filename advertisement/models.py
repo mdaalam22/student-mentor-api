@@ -1,4 +1,5 @@
 from django.db import models
+from PIL import Image
 
 # Create your models here.
 def upload_img(instance,filename):
@@ -25,4 +26,10 @@ class Advertisement(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+    def save(self, *args, **kwargs):
+       super(Advertisement, self).save(*args, **kwargs)
+       image = Image.open(self.image.path)
+       image.save(self.image.path,quality=20,optimize=True)
+
 

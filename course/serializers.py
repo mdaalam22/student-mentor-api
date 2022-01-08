@@ -25,18 +25,20 @@ class CourseSerializerView(serializers.ModelSerializer):
 class SearchViewSerializer(serializers.ModelSerializer):
     course_id = serializers.IntegerField(source='course.id')
     course_name = serializers.CharField(source='course.course_name')
+    course_slug = serializers.SlugField(source='course.slug')
     chapter_id = serializers.IntegerField(source='chapter.id')
     chapter_title = serializers.CharField(source='chapter.chapter_title')
     ques_id = serializers.IntegerField(source='id')
     class Meta:
         model = Question
-        fields = ['course_id','course_name','chapter_id','chapter_title','ques_id','question']
+        fields = ['course_id','course_name','course_slug','chapter_id','chapter_title','ques_id','question']
     
     def to_representation(self, data):
         data = super(SearchViewSerializer, self).to_representation(data)
         query = self.context.get('request').query_params.get('search')
         if not Course.objects.filter(id=data['course_id'],course_name__icontains=query):
             data['course_name'] = None
+            data['course_slug'] = None
         if not CourseContent.objects.filter(id=data['chapter_id'],chapter_title__icontains=query):
             data['chapter_title'] = None
         
